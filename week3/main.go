@@ -98,7 +98,104 @@ func maps() {
 	//}
 }
 
+// structs
+
+type Address struct {
+	Street string
+}
+
+type Person struct {
+	Name string
+	Age int
+	Height, Weight float32
+	Address []Address
+}
+
+func (p Person) String() string {
+	return fmt.Sprintf("My name is %s, I am %d years old, and I weigh %.2f\n",
+		p.Name, p.Age, p.Weight)
+}
+
+func (p *Person) LooseWeight(w float32) {
+	p.Weight -= w
+}
+
+func OOP() {
+	Nnamdi := Person{
+		Name: "Nnamdi",
+		Age: 54,
+		Height: 20.56,
+		Weight: 300.45,
+	}
+
+	Franklyn := Person{
+		Name: "Franklyn",
+		Age: 18,
+		Height: 23.45,
+		Weight: 45,
+	}
+
+	persons := []Person{
+		{
+			Name: "New person",
+			Age: 34,
+			Height: 23,
+			Weight: 45,
+		},
+		Franklyn,
+		Nnamdi,
+	}
+	for _, person := range persons[:1] {
+		fmt.Println(person)
+		person.LooseWeight(5)
+		fmt.Println(person)
+	}
+
+}
+
+func Change(v []int) {
+	v[0] = 50
+}
+
 func main() {
-	Arr()
+	//Arr()
 	//maps()
+	//OOP()
+	//a := []int{1,2,3,4,5,6,7,8,9}
+	//Change(a)
+	//fmt.Println(a)
+	//b := a
+	//// | | | | | | |
+	//fmt.Printf("[1]: address of slice a %p add of b %p \n", &a, &b)
+	//a[0] = 30
+	//a[8] = 35
+	//fmt.Printf("[2]: address of slice a %p add of b %p \n", &a, &b)
+	//a = append(a, 12)
+	//a[0] = 45
+	//fmt.Printf("[3]: address of slice a %p add of b %p \n", &a, &b)
+	//fmt.Printf("address of slice %v add of Arr %v \n", a, b)
+
+	//ghost := Cat{
+	//	Basics:       Animal{
+	//		Name: "Ghost",
+	//		mean: true,
+	//	},
+	//	MeowStrength: 2,
+	//}
+	//var shout NoiseMaker
+	ice := &Dog{
+		Animal:       Animal{
+			Name: "Ice",
+			mean: false,
+		},
+		BarkStrength: 3,
+	}
+
+	//shout = ice
+	//ice.MakeNoise()
+	//ghost.MakeNoise()
+
+	// interfaces
+	//n := NoiseMaker()
+	MakeSomeNoise(ice)
 }
