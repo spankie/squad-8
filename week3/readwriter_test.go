@@ -11,6 +11,8 @@ func (cli MockReadWriter) Read() string {
 	return "testing read"
 }
 
+
+
 func (cli MockReadWriter) Write(output string) {
 	fmt.Println(output)
 }
