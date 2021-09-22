@@ -39,11 +39,10 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 func BlogHandler(rw http.ResponseWriter, req *http.Request) {
 	// handle blog route
-	if req.Method == http.MethodPost {
-		rw.WriteHeader(http.StatusMethodNotAllowed)
+	if req.Method != http.MethodPost {
+		//rw.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
-	//req.Body
 	fmt.Printf("User agent: %s\n", req.UserAgent())
 	fmt.Printf("accepts: %s\n", req.Header.Get("Accept"))
 	blogPosts := ""
@@ -60,7 +59,7 @@ func BlogHandler(rw http.ResponseWriter, req *http.Request) {
 	`
 	rw.WriteHeader(http.StatusOK)
 	for i, v := range Posts {
-		blogPosts += fmt.Sprintf("<h4>%d %s</h4><br/><p>%s</p><br/><br/>", i, v.Title, v.Body)
+		blogPosts += fmt.Sprintf("<h4>%d %s</h4><br/><p>%s</p><br/>", i, v.Title, v.Body)
 	}
 	rw.Write([]byte(fmt.Sprintf(blogResponse, blogPosts)))
 }
@@ -84,7 +83,7 @@ func CreatBlogHandler(rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 }
 
-func main() {
+func start() {
 	port := ":"
 	port += os.Getenv("PORT")
 	if port == ":" {
