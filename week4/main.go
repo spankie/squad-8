@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"html/template"
 	"log"
 	"os"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type Name string
@@ -37,33 +38,62 @@ func CallRun() {
 	//}
 }
 
-/*
-	{
-		"key": "value",
-		"key2": 10,
-		"key3": 10.00,
-		"key4": {
-			"key5": "value"
-			"key6": [
-				"string", 10, {}
-			]
-		},
-	}
-
-*/
-
 type User struct {
-	ID          int `json:"-"`
-	Name        string
-	Occupation  string
+	ID          int    `json:"-"`
+	Name        string `json:"name,omitempty"`
+	Occupation  string `json:"occupation"`
 	Description string `json:"description"`
 }
 
+/// {} curly brackets or braces
+/// [] square brackets
+// . < > angle brackets
+// () parentheses
+
 func Json() {
+	/*
+		jsonObject := `
+		[
+			{
+				"key": "value",
+				"key2": 10,
+				"key3": 10.00,
+				"key4": {
+					"key5": "value",
+					"key6": [
+						"string", 10, {}
+					]
+				}
+			}
+		]
+		`
 
-	u1 := User{Name: "John Doe", Occupation: "gardener"}
+		// convert json string to golang object
+		var jsonData interface{}
 
-	json_data, err := json.MarshalIndent(u1, "", "  ")
+		err := json.Unmarshal([]byte(jsonObject), &jsonData)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("%+v\n", jsonData)
+	*/
+	// for _, m := range jsonData {
+	// 	for k, v := range m {
+	// 		fmt.Printf("%s : %v\n", k, v)
+	// 	}
+	// }
+
+	// J S O N => Javascript Object Notation
+
+	u1 := User{
+		ID:          1,
+		Description: "Sample description",
+		// Name:        "John Doe",
+		Occupation: "gardener",
+	}
+	// json_data, err := json.Marshal(u1)
+
+	json_data, err := json.MarshalIndent(u1, "-", "	")
 
 	if err != nil {
 
@@ -71,21 +101,22 @@ func Json() {
 	}
 
 	fmt.Println(string(json_data))
+	/*
+		users := []User{
+			{ID: 2, Name: "Roger Roe", Occupation: "driver"},
+			{ID: 3, Name: "Lucy Smith", Occupation: "teacher"},
+			{ID: 4, Name: "David Brown", Occupation: "programmer"},
+		}
 
-	users := []User{
-		{ID: 2, Name: "Roger Roe", Occupation: "driver"},
-		{ID: 3, Name: "Lucy Smith", Occupation: "teacher"},
-		{ID: 4, Name: "David Brown", Occupation: "programmer"},
-	}
+		json_data2, err := json.MarshalIndent(users, "", "  ")
 
-	json_data2, err := json.MarshalIndent(users, "", "  ")
+		if err != nil {
 
-	if err != nil {
+			log.Fatal(err)
+		}
 
-		log.Fatal(err)
-	}
-
-	fmt.Println(string(json_data2))
+		fmt.Println(string(json_data2))
+	*/
 }
 
 func Json2() {
@@ -232,6 +263,7 @@ func Templates() {
 }
 
 func main() {
+	Json()
 	//out, err := os.Create("novel.txt") //give any name
 	//if err != nil {
 	//	fmt.Printf("error occured creating novel.txt: %v\n", err)
@@ -264,5 +296,5 @@ func main() {
 	//fmt.Printf("read %d bytes: %q\n", count, data[:count])
 	//Json2()
 	//Timestamp()
-	Templates()
+	// Templates()
 }

@@ -1,0 +1,22 @@
+[{
+  "key": "value",
+  "key2": 10,
+  "key3": 10.00,
+  "key4": {
+    "key5": "value",
+    "key6": [
+      "string", 10, {}
+    ]
+  }
+},
+{
+  "key": "value",
+  "key2": 10,
+  "key3": 10.00,
+  "key4": {
+    "key5": "value",
+    "key6": [
+      "string", 10, {}
+    ]
+  }
+}]
