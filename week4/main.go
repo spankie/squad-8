@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -91,6 +92,7 @@ func Json() {
 		// Name:        "John Doe",
 		Occupation: "gardener",
 	}
+
 	// json_data, err := json.Marshal(u1)
 
 	json_data, err := json.MarshalIndent(u1, "-", "	")
@@ -121,11 +123,11 @@ func Json() {
 
 func Json2() {
 	obj := `{
-	"id": 1,
-  "name": "John Doe",
-  "Occupation": "gardener",
-"Description": "5"
-}`
+		"id": 1,
+  	"name": "John Doe",
+  	"Occupation": "gardener",
+  	"Description": "5"
+	}`
 	/*
 			obj1 := `
 		[
@@ -262,38 +264,81 @@ func Templates() {
 	}
 }
 
+func Files() {
+	// IO => Input and Output
+	// Writer Interface : has only one method, and the name is Write
+	// Reader Interface : Reader has only one method called read
+
+	// io.Closer interface : has only one method called Close
+	dst, err := os.Create("novel.txt") //give any name
+	if err != nil {
+		fmt.Printf("error occured creating %s: %v\n", dst.Name(), err)
+	}
+	dst.Write([]byte("here is a file content\twe want to put into\nnovel.txt"))
+	dst.Write([]byte("\nnew content"))
+
+	dst.Seek(0, 0) // seek to the beginning of the file
+	// EOF : end of file
+	body := make([]byte, 10)
+	for n, err := dst.Read(body); err == nil; n, err = dst.Read(body) {
+		fmt.Printf("%s", body[:n])
+	}
+	fmt.Println("\n------------------------------------------------")
+	// if err != nil {
+	// 	fmt.Printf("error reading from file : %v\n", err)
+	// }
+
+	src, err := os.Create("source.txt") //give any name
+	if err != nil {
+		fmt.Printf("error occured creating %s: %v\n", src.Name(), err)
+	}
+	src.Write([]byte("This is the file we want to read from"))
+
+	src.Seek(0, 0) // seek to the beginning of the file
+
+	n, err := io.Copy(dst, src)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Printf("we copied %d bytes from %s to %s\n", n, src.Name(), dst.Name())
+
+	file, err := os.Open("./content/novel.txt") // For read access.
+	if err != nil {
+		log.Fatal(err)
+	}
+	data := make([]byte, 100)
+	count, err := file.Read(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// d -> directory
+	// r -> readable -> 3
+	// w -> writable -> 2
+	// x -> executable -> 1
+	// owner, group, everyone else
+	// 0644
+
+	// file with mode 0333
+
+	// d rwx r-x r-x
+
+	// ioutil.ReadAll()
+	// ioutil.WriteFile()
+
+	fmt.Printf("read %d bytes: %q\n", count, data[:count])
+
+	if err := dst.Close(); err != nil {
+		panic(err)
+	}
+
+	if err := src.Close(); err != nil {
+		panic(err)
+	}
+}
+
 func main() {
-	Json()
-	//out, err := os.Create("novel.txt") //give any name
-	//if err != nil {
-	//	fmt.Printf("error occured creating novel.txt: %v\n", err)
-	//}
-	//out.Write([]byte("here is a file content\twe want to put into novel.txt"))
-	//defer out.Close()
-	//
-	//in, err := os.Create("novel1.txt") //give any name
-	//if err != nil {
-	//	fmt.Printf("error occured creating novel.txt: %v\n", err)
-	//}
-	//in.Write([]byte("This is the file we want to read from"))
-	//defer in.Close()
-	//
-	//n, err := io.Copy(out, in)
-	//if err != nil {
-	//	log.Println(err)
-	//}
-	//log.Printf("we copied %d bytes from in to out\n", n)
-	//file, err := os.Open("./content/novel.txt") // For read access.
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//data := make([]byte, 100)
-	//count, err := file.Read(data)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//fmt.Printf("read %d bytes: %q\n", count, data[:count])
+	// Json()
+	Files()
 	//Json2()
 	//Timestamp()
 	// Templates()

@@ -1,1 +1,3 @@
-here is a file content	we want to put into novel.txt
+here is a file content	we want to put into
+novel.txt
+new contentThis is the file we want to read from
