@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"io"
 	"log"
 	"os"
+	"text/template"
 	"time"
 
 	"github.com/pkg/errors"
@@ -89,8 +89,8 @@ func Json() {
 	u1 := User{
 		ID:          1,
 		Description: "Sample description",
+		Occupation:  "gardener",
 		// Name:        "John Doe",
-		Occupation: "gardener",
 	}
 
 	// json_data, err := json.Marshal(u1)
@@ -190,11 +190,16 @@ func Timestamp() {
 }
 
 //
-//type Todo struct {
-//	Name        string
-//	Description string
-//	ID          string
-//}
+type Todo struct {
+	Name        string
+	Description string
+	ID          string
+}
+
+func (t *Todo) Write(b []byte) (int, error) {
+	fmt.Printf("%s\n", b)
+	return len(b), nil
+}
 
 type entry struct {
 	Name string
@@ -209,59 +214,73 @@ type ToDo struct {
 //var html = ``
 
 func Templates() {
-	//td := Todo{
-	//	Name:        "Test templates",
-	//	Description: "Let's test a template to see the magic.",
-	//	ID: "1",
-	//}
-	/*
-		t, err := template.New("todos").Parse("You have a task named \"{{ .ID}}. {{ .Name}}\" with description: \"{{ .Description}}\"")
-		if err != nil {
-			panic(err)
-		}
-		// You have a task named "Test templates"
-		// You have a task named "1. Test templates"
-		err = t.Execute(os.Stdout, td)
-		if err != nil {
-			panic(err)
-		}
-	*/
-	todos := ToDo{
-		User: "Omoyemi",
-		List: []entry{
-			{
-				Name: "Write test",
-				Done: false,
-			},
-			{
-				Name: "Eat Lunch",
-				Done: false,
-			},
-		},
+	text := `You have a task named "{{ .ID}}. {{ .Name}}" with description: "{{ .Description}}"`
+	td := Todo{
+		Name:        "Test templates",
+		Description: "Let's test a template to see the magic.",
+		ID:          "3",
 	}
-	/*
-			{
-				User: "Clinton",
-				List: []entry{{
-					Name: "See my girlfriend",
-					Done: false,
-				},
-					{
-						Name: "Go to dinner date",
-						Done: true,
-					},
-				},
-			},
-		}
-	*/
-
-	tmpls := []string{"todo.tmpl"}
-	t := template.Must(template.ParseFiles(tmpls...))
-
-	err := t.Execute(os.Stdout, todos)
+	t, err := template.New("todos").Parse(text)
 	if err != nil {
 		panic(err)
 	}
+	// You have a task named "Test templates"
+	// You have a task named "1. Test templates"
+	// os.Stdout
+	// Stdin
+
+	// f, err := os.Create("todos.txt")
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	err = t.Execute(&td, td)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("\nhello standard out")
+
+	// reset stdout back to it's normal state
+	// os.Stdout = old
+	/*
+		todos := ToDo{
+			User: "Omoyemi",
+			List: []entry{
+				{
+					Name: "Write test",
+					Done: false,
+				},
+				{
+					Name: "Eat Lunch",
+					Done: false,
+				},
+			},
+
+			// 	{
+			// 		User: "Clinton",
+			// 		List: []entry{{
+			// 			Name: "See my girlfriend",
+			// 			Done: false,
+			// 		},
+			// 			{
+			// 				Name: "Go to dinner date",
+			// 				Done: true,
+			// 			},
+			// 		},
+			// 	},
+			// }
+
+		}
+
+		tmpls := []string{"todo.tmpl"}
+		t := template.Must(template.ParseFiles(tmpls...))
+
+		err := t.Execute(os.Stdout, todos)
+		if err != nil {
+			panic(err)
+		}
+	*/
 }
 
 func Files() {
@@ -338,8 +357,37 @@ func Files() {
 
 func main() {
 	// Json()
-	Files()
+	// Files()
 	//Json2()
 	//Timestamp()
-	// Templates()
+	Templates()
+	// object relational mapper => access data from database
+	// gorm => go ORM
+	/*
+		type u struct {
+			UserEmail string `json:"-"`
+			Username  int    `json:"username,omitempty"`
+			Password  string
+		}
+		// login
+		payload := `{"user_email":"joseph@gmail.com",  "password": "decagon@joseph"}`
+
+		// credentials := make(map[string]interface{})
+		credentials := u{Username: 50}
+		err := json.Unmarshal([]byte(payload), &credentials)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(credentials.Username)
+		fmt.Printf("%+v\n", credentials)
+
+		credentials.Username = 0
+		b, err := json.Marshal(credentials)
+		if err != nil {
+
+			panic(err)
+		}
+
+		fmt.Println(string(b))
+	*/
 }
